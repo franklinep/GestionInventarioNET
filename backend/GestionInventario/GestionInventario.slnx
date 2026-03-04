@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="GestionInventario.Api/PresentationLayer.csproj" Id="43924655-b5ba-4a99-8be1-cdb8b7fd8ce6" />
+  <Project Path="GestionInventario.Application/ApplicationLayer.csproj" Id="a44b03bb-4ff6-4ea3-8bcc-cf4dbf2bba48" />
+  <Project Path="GestionInventario.Infrastructure/InfrastructureLayer.csproj" Id="096b7567-1292-41ae-80ae-b318240b4a8f" />
+</Solution>
