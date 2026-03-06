@@ -1,6 +1,6 @@
 ﻿using GestionInventario.Domain.Entities;
 
-namespace GestionInventario.Application.Features.Auth.Interfaces
+namespace GestionInventario.Application.Auth.Interfaces
 {
     public interface IJWTokenService
     {

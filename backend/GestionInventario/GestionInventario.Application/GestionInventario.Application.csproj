@@ -7,11 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-	<Folder Include="Features\Auth\DTOs\" />
-	<Folder Include="Features\Auth\Interfaces\" />
-	<Folder Include="Features\Auth\Services\" />
-    <Folder Include="Features\InventarioReportes\Interfaces\" />
-    <Folder Include="Features\Productos\Interfaces\" />
+    <Folder Include="InventarioReportes\Interfaces\" />
+    <Folder Include="Productos\Interfaces\" />
 	<ProjectReference Include="..\GestionInventario.Domain\GestionInventario.Domain.csproj" />
   </ItemGroup>
 </Project>

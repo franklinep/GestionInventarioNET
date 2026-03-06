@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GestionInventario.Application.Features.Auth.DTOs
+namespace GestionInventario.Application.Auth.DTOs
 {
     public record LoginRequest(string Correo, string Password);
 }

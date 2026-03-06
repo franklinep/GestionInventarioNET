@@ -1,8 +1,9 @@
-﻿using GestionInventario.Application.Features.Auth.DTOs;
-using GestionInventario.Application.Features.Auth.Interfaces;
+﻿using GestionInventario.Application.Auth.DTOs;
+using GestionInventario.Application.Auth.Interfaces;
 using GestionInventario.Domain.Entities;
+using GestionInventario.Domain.Interfaces;
 
-namespace GestionInventario.Application.Features.Auth.Services
+namespace GestionInventario.Application.Auth.Services
 {
     public class AuthService : IAuthService
     {
@@ -30,8 +31,6 @@ namespace GestionInventario.Application.Features.Auth.Services
                 Correo = correo,
                 PasswordHash = _passHasher.Hash(req.Password),
                 IsActivo = true,
-                CreatedAt = DateTime.UtcNow,
-                UpdateAt = DateTime.UtcNow
             };
 
             var usuarioCreado = await _usuarioRepo.AddUsuario(nuevoUsuario, ct);
@@ -47,9 +46,26 @@ namespace GestionInventario.Application.Features.Auth.Services
             );
         }
 
-        public Task<AuthResponse> LoginUsuario(LoginRequest req, CancellationToken ct)
+        public async Task<AuthResponse> LoginUsuario(LoginRequest req, CancellationToken ct)
         {
-            throw new NotImplementedException();
+            var correo = req.Correo.Trim();
+            var password = req.Password;
+            var usuario = await _usuarioRepo.GetByCorreo(correo, ct);
+            if(usuario == null) 
+                throw new UnauthorizedAccessException("Correo no registrado");
+            if(!usuario.IsActivo)
+                throw new UnauthorizedAccessException("Usuario inactivo, por favor comunicarse con el administrador");
+            if (!_passHasher.Verify(password, usuario.PasswordHash))
+                throw new UnauthorizedAccessException("Contraseña incorrecta");
+
+            var token = _jwt.GenerateToken(usuario);
+            return new AuthResponse(
+                token.token,
+                token.expiresAtUtc,
+                usuario.UsuarioId,
+                usuario.Nombre,
+                usuario.Correo
+            );
         }
 
     }

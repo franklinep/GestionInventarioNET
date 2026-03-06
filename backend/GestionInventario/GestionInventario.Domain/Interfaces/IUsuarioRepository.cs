@@ -1,6 +1,6 @@
 ﻿using GestionInventario.Domain.Entities;
 
-namespace GestionInventario.Application.Features.Auth.Interfaces
+namespace GestionInventario.Domain.Interfaces
 {
     public interface IUsuarioRepository
     {

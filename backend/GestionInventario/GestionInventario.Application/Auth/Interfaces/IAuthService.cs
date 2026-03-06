@@ -1,6 +1,6 @@
-﻿using GestionInventario.Application.Features.Auth.DTOs;
+﻿using GestionInventario.Application.Auth.DTOs;
 
-namespace GestionInventario.Application.Features.Auth.Interfaces
+namespace GestionInventario.Application.Auth.Interfaces
 {
     public interface IAuthService
     {
