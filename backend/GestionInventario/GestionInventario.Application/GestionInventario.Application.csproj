@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<Folder Include="Features\Auth\DTOs\" />
+	<Folder Include="Features\Auth\Interfaces\" />
+	<Folder Include="Features\Auth\Services\" />
+    <Folder Include="Features\InventarioReportes\Interfaces\" />
+    <Folder Include="Features\Productos\Interfaces\" />
+	<ProjectReference Include="..\GestionInventario.Domain\GestionInventario.Domain.csproj" />
+  </ItemGroup>
+</Project>

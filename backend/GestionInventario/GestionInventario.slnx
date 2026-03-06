@@ -1,5 +1,6 @@
 <Solution>
-  <Project Path="GestionInventario.Api/PresentationLayer.csproj" Id="43924655-b5ba-4a99-8be1-cdb8b7fd8ce6" />
-  <Project Path="GestionInventario.Application/ApplicationLayer.csproj" Id="a44b03bb-4ff6-4ea3-8bcc-cf4dbf2bba48" />
-  <Project Path="GestionInventario.Infrastructure/InfrastructureLayer.csproj" Id="096b7567-1292-41ae-80ae-b318240b4a8f" />
+  <Project Path="GestionInventario.Api/GestionInventario.Api.csproj" Id="43924655-b5ba-4a99-8be1-cdb8b7fd8ce6" />
+  <Project Path="GestionInventario.Application/GestionInventario.Application.csproj" Id="a44b03bb-4ff6-4ea3-8bcc-cf4dbf2bba48" />
+  <Project Path="GestionInventario.Domain/GestionInventario.Domain.csproj" Id="6eea776e-392a-4aff-907e-5c94b0178792" />
+  <Project Path="GestionInventario.Infrastructure/GestionInventario.Infrastructure.csproj" Id="096b7567-1292-41ae-80ae-b318240b4a8f" />
 </Solution>
