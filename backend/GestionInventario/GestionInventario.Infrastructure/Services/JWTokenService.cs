@@ -27,12 +27,15 @@ namespace GestionInventario.Infrastructure.Services
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
+            // Mapeo simple de RolId a nombre (1 = admin, 2 = empleado)
+            var rolNombre = usuario.RolId == 1 ? "admin" : "empleado";
+
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, usuario.UsuarioId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, usuario.Correo),
                 new Claim(ClaimTypes.Name, usuario.Nombre),
-                new Claim(ClaimTypes.Role, usuario.Rol.Nombre),
+                new Claim(ClaimTypes.Role, rolNombre),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 

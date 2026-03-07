@@ -18,8 +18,11 @@ public static class Program
         var builder = WebApplication.CreateBuilder(args);
 
         // Se configura el DbContext 
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
         builder.Services.AddDbContext<InventarioDbContext>(options =>
-            options.UseNpgsql(builder.Configuration.GetConnectionString("IventarioConn")));
+            options.UseNpgsql(builder.Configuration.GetConnectionString("IventarioConn"))
+            .UseSnakeCaseNamingConvention());
 
         // Se registran los repositorios
         builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
@@ -30,7 +33,7 @@ public static class Program
         builder.Services.AddScoped<IJWTokenService, JWTokenService>();
 
         // Se configura el JWT
-        var jwtSecret = builder.Configuration["Jwt:Secret"] 
+        var jwtSecret = builder.Configuration["Jwt:Secret"]
             ?? throw new InvalidOperationException("JWT Secret no configurado");
         var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "GestionInventario";
         var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "GestionInventarioApp";
@@ -61,7 +64,7 @@ public static class Program
 
         var app = builder.Build();
 
-        
+
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();

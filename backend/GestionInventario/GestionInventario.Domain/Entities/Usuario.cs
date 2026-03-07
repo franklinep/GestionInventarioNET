@@ -8,9 +8,7 @@
         public string Correo { get; set; } = default!;
         public string PasswordHash { get; set; } = default!;
         public bool IsActivo { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public DateTime? UpdateAt { get; set; } 
-
-        public Rol Rol { get; set; } = default!;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? UpdatedAt { get; set; } = DateTime.UtcNow;
     }
 }

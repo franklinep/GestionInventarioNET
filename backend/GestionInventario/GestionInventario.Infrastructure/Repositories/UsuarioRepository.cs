@@ -16,7 +16,6 @@ namespace GestionInventario.Infrastructure.Repositories
         public async Task<Usuario?> GetByCorreo(string correo, CancellationToken ct)
         {
             return await _db.Usuarios
-                .Include(u => u.Rol)
                 .FirstOrDefaultAsync(u => u.Correo == correo, ct);
         }
 
