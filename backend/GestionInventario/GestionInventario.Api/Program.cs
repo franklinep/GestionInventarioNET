@@ -1,5 +1,13 @@
 using GestionInventario.Application.Auth.Interfaces;
 using GestionInventario.Application.Auth.Services;
+using GestionInventario.Application.Categorias.Interfaces;
+using GestionInventario.Application.Categorias.Services;
+using GestionInventario.Application.Dashboard.Interfaces;
+using GestionInventario.Application.Dashboard.Services;
+using GestionInventario.Application.Productos.Interfaces;
+using GestionInventario.Application.Productos.Services;
+using GestionInventario.Application.Reportes.Interfaces;
+using GestionInventario.Application.Reportes.Services;
 using GestionInventario.Domain.Interfaces;
 using GestionInventario.Infrastructure;
 using GestionInventario.Infrastructure.Repositories;
@@ -8,6 +16,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using DinkToPdf;
+using DinkToPdf.Contracts;
 
 namespace GestionInventario.Api;
 
@@ -17,22 +27,30 @@ public static class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Se configura el DbContext 
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
         builder.Services.AddDbContext<InventarioDbContext>(options =>
             options.UseNpgsql(builder.Configuration.GetConnectionString("IventarioConn"))
             .UseSnakeCaseNamingConvention());
 
-        // Se registran los repositorios
         builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+        builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
+        builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
 
-        // Se registran los servicios 
         builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.AddScoped<IPasswordHasher, BcryptPasswordHasher>();
         builder.Services.AddScoped<IJWTokenService, JWTokenService>();
+        builder.Services.AddScoped<ICategoriaService, CategoriaService>();
+        builder.Services.AddScoped<IProductoService, ProductoService>();
+        builder.Services.AddScoped<IImagenService, ImagenService>();
+        builder.Services.AddScoped<IDashboardService, DashboardService>();
 
-        // Se configura el JWT
+        builder.Services.AddScoped<IReporteService, ReporteService>();
+        builder.Services.AddScoped<INotificacionService, EmailNotificationService>();
+
+        builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+        builder.Services.AddScoped<IPdfService, PdfService>();
+
         var jwtSecret = builder.Configuration["Jwt:Secret"]
             ?? throw new InvalidOperationException("JWT Secret no configurado");
         var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "GestionInventario";
@@ -55,10 +73,8 @@ public static class Program
 
         builder.Services.AddAuthorization();
 
-        // Se agrega los controladores
         builder.Services.AddControllers();
 
-        // Se configura el swagger
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
@@ -72,6 +88,8 @@ public static class Program
         }
 
         app.UseHttpsRedirection();
+
+        app.UseStaticFiles();
 
         app.UseAuthentication();
         app.UseAuthorization();

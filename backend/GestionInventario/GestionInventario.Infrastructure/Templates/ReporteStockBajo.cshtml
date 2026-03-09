@@ -1,0 +1,152 @@
+@model GestionInventario.Application.Reportes.DTOs.ReporteStockBajoResponse
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Reporte de Stock Bajo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #d32f2f;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .header {
+            background-color: #f5f5f5;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .stats {
+            display: table;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        .stat-box {
+            display: table-cell;
+            text-align: center;
+            padding: 15px;
+            background-color: #fff3e0;
+            border-radius: 5px;
+            width: 33%;
+        }
+        .stat-box.critico {
+            background-color: #ffebee;
+        }
+        .stat-box h3 {
+            margin: 0;
+            font-size: 28px;
+            color: #424242;
+        }
+        .stat-box p {
+            margin: 5px 0 0 0;
+            color: #666;
+            font-size: 12px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th {
+            background-color: #424242;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-size: 12px;
+        }
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            font-size: 11px;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .critico {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        .bajo {
+            color: #f57c00;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #999;
+            font-size: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📊 Reporte de Productos con Stock Bajo</h1>
+        <p>Generado el: <strong>@Model.FechaGeneracion.ToString("dd/MM/yyyy HH:mm")</strong></p>
+    </div>
+
+    <div class="stats">
+        <div class="stat-box">
+            <h3>@Model.TotalProductos</h3>
+            <p>Productos con stock bajo</p>
+        </div>
+        <div class="stat-box critico">
+            <h3>@Model.ProductosCriticos</h3>
+            <p>Productos CRÍTICOS (&lt; 5)</p>
+        </div>
+        <div class="stat-box">
+            <h3>S/ @Model.ValorAfectado.ToString("N2")</h3>
+            <p>Valor total afectado</p>
+        </div>
+    </div>
+
+    @if (Model.Productos.Any())
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Producto</th>
+                    <th>Categoría</th>
+                    <th>Stock</th>
+                    <th>Nivel</th>
+                    <th>Precio</th>
+                    <th>Última Act.</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var producto in Model.Productos)
+                {
+                    <tr>
+                        <td>@producto.ProductoId</td>
+                        <td>@producto.Nombre</td>
+                        <td>@producto.CategoriaNombre</td>
+                        <td class="@(producto.Nivel == "Crítico" ? "critico" : "bajo")">
+                            @producto.StockActual unidades
+                        </td>
+                        <td class="@(producto.Nivel == "Crítico" ? "critico" : "bajo")">
+                            @producto.Nivel
+                        </td>
+                        <td>S/ @producto.Precio.ToString("N2")</td>
+                        <td>@producto.UltimaActualizacion.ToString("dd/MM/yyyy")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p style="text-align: center; margin-top: 50px; color: #4caf50; font-size: 18px;">
+            ✅ ¡Excelente! No hay productos con stock bajo.
+        </p>
+    }
+
+    <div class="footer">
+        <p>Sistema de Gestión de Inventario - Reporte generado automáticamente</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,2 @@
+Directorio para almacenar imágenes de productos.
+Las imágenes se guardan con el formato: {ProductoId}_{GUID}.{extension}

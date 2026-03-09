@@ -9,6 +9,8 @@ namespace GestionInventario.Infrastructure
 
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Rol> Roles { get; set; }
+        public DbSet<Categoria> Categorias { get; set; }
+        public DbSet<Producto> Productos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder mb)
         {
@@ -28,6 +30,28 @@ namespace GestionInventario.Infrastructure
                 e.Property(x => x.Correo).HasColumnType("citext").HasMaxLength(100).IsRequired();
                 e.Property(x => x.PasswordHash).HasMaxLength(255).IsRequired();
                 e.HasIndex(x => x.Correo).IsUnique();
+            });
+
+            mb.Entity<Categoria>(e =>
+            {
+                e.ToTable("categorias");
+                e.Property(x => x.Nombre).HasMaxLength(80).IsRequired();
+                e.Property(x => x.IsActivo).HasDefaultValue(true);
+                e.HasIndex(x => x.Nombre).IsUnique();
+            });
+
+            mb.Entity<Producto>(e =>
+            {
+                e.ToTable("productos");
+                e.Property(x => x.Nombre).HasMaxLength(150).IsRequired();
+                e.Property(x => x.Descripcion).HasColumnType("text");
+                e.Property(x => x.Precio).HasPrecision(12, 2).IsRequired();
+                e.Property(x => x.Stock).IsRequired();
+                e.Property(x => x.IsActivo).HasDefaultValue(true);
+
+                e.HasIndex(x => x.CategoriaId).HasDatabaseName("ix_productos_categoria");
+                e.HasIndex(x => x.Stock).HasDatabaseName("ix_productos_stock");
+                e.HasIndex(x => x.Nombre).HasDatabaseName("ix_productos_nombre");
             });
         }
     }
