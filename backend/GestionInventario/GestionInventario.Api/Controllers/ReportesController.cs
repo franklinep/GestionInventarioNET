@@ -61,7 +61,7 @@ namespace GestionInventario.Api.Controllers
         /// Envía el reporte PDF de stock bajo por email al administrador
         /// </summary>
         [HttpPost("stock-bajo/enviar-email")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -79,3 +79,4 @@ namespace GestionInventario.Api.Controllers
         }
     }
 }
+    
