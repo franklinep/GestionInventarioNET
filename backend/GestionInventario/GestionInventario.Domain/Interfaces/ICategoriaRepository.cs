@@ -9,5 +9,6 @@ namespace GestionInventario.Domain.Interfaces
         Task<Categoria> Add(Categoria categoria, CancellationToken ct);
         Task Delete(short id, CancellationToken ct);
         Task Update(Categoria categoria, CancellationToken ct);
+        Task<bool> TieneProductosAsociados(short categoriaId, CancellationToken ct);
     }
 }

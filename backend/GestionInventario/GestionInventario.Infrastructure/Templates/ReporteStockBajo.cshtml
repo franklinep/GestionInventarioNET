@@ -6,147 +6,304 @@
     <meta charset="utf-8" />
     <title>Reporte de Stock Bajo</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+            color: #2d3748;
+            font-size: 11px;
+            line-height: 1.5;
+            padding: 24px 28px;
         }
-        h1 {
-            color: #d32f2f;
-            text-align: center;
-            margin-bottom: 10px;
-        }
+
+        /* ── Header ── */
         .header {
-            background-color: #f5f5f5;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            text-align: center;
-        }
-        .stats {
             display: table;
             width: 100%;
-            margin-bottom: 30px;
+            margin-bottom: 24px;
+            border-bottom: 3px solid #006EC4;
+            padding-bottom: 16px;
         }
-        .stat-box {
+
+        .header-left {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .header-right {
+            display: table-cell;
+            text-align: right;
+            vertical-align: middle;
+        }
+
+        .brand {
+            font-size: 22px;
+            font-weight: 700;
+            color: #006EC4;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-sub {
+            font-size: 10px;
+            color: #718093;
+            margin-top: 2px;
+        }
+
+        .report-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a202c;
+        }
+
+        .report-date {
+            font-size: 10px;
+            color: #718093;
+            margin-top: 2px;
+        }
+
+        /* ── Summary Cards ── */
+        .summary {
+            display: table;
+            width: 100%;
+            margin-bottom: 28px;
+            table-layout: fixed;
+        }
+
+        .summary-card {
             display: table-cell;
             text-align: center;
-            padding: 15px;
-            background-color: #fff3e0;
-            border-radius: 5px;
-            width: 33%;
+            padding: 14px 10px;
+            border-radius: 6px;
+            vertical-align: top;
         }
-        .stat-box.critico {
-            background-color: #ffebee;
+
+        .summary-card.total {
+            background-color: #e8f4fd;
+            border-left: 4px solid #006EC4;
         }
-        .stat-box h3 {
-            margin: 0;
-            font-size: 28px;
-            color: #424242;
+
+        .summary-card.critico {
+            background-color: #fef2f2;
+            border-left: 4px solid #dc2626;
         }
-        .stat-box p {
-            margin: 5px 0 0 0;
-            color: #666;
+
+        .summary-card.valor {
+            background-color: #fef9e7;
+            border-left: 4px solid #FEB000;
+        }
+
+        .summary-spacer {
+            display: table-cell;
+            width: 12px;
+        }
+
+        .summary-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a202c;
+            display: block;
+        }
+
+        .summary-label {
+            font-size: 9px;
+            color: #718093;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+            display: block;
+        }
+
+        /* ── Category Section ── */
+        .category-section {
+            margin-bottom: 22px;
+            page-break-inside: avoid;
+        }
+
+        .category-header {
+            background-color: #006EC4;
+            color: #ffffff;
+            padding: 8px 14px;
+            border-radius: 4px 4px 0 0;
             font-size: 12px;
+            font-weight: 700;
         }
+
+        .category-header span {
+            font-weight: 400;
+            font-size: 10px;
+            opacity: 0.85;
+            margin-left: 8px;
+        }
+
+        /* ── Table ── */
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
         }
+
         th {
-            background-color: #424242;
-            color: white;
-            padding: 12px;
+            background-color: #f1f5f9;
+            color: #475569;
+            padding: 8px 12px;
             text-align: left;
-            font-size: 12px;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            border-bottom: 2px solid #e2e8f0;
         }
+
         td {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-            font-size: 11px;
+            padding: 8px 12px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 10.5px;
+            color: #334155;
         }
+
         tr:nth-child(even) {
-            background-color: #f9f9f9;
+            background-color: #fafbfc;
         }
-        .critico {
-            color: #d32f2f;
-            font-weight: bold;
+
+        /* ── Badges ── */
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 9px;
+            font-weight: 700;
         }
-        .bajo {
-            color: #f57c00;
+
+        .badge-critico {
+            background-color: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
         }
+
+        .badge-bajo {
+            background-color: #fef9e7;
+            color: #d97706;
+            border: 1px solid #fde68a;
+        }
+
+        .stock-critico {
+            color: #dc2626;
+            font-weight: 700;
+        }
+
+        .stock-bajo {
+            color: #d97706;
+            font-weight: 600;
+        }
+
+        /* ── Empty State ── */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #16a34a;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* ── Footer ── */
         .footer {
             margin-top: 30px;
+            padding-top: 12px;
+            border-top: 1px solid #e2e8f0;
             text-align: center;
-            color: #999;
-            font-size: 10px;
+            color: #94a3b8;
+            font-size: 9px;
         }
     </style>
 </head>
 <body>
+    <!-- Header -->
     <div class="header">
-        <h1>📊 Reporte de Productos con Stock Bajo</h1>
-        <p>Generado el: <strong>@Model.FechaGeneracion.ToString("dd/MM/yyyy HH:mm")</strong></p>
-    </div>
-
-    <div class="stats">
-        <div class="stat-box">
-            <h3>@Model.TotalProductos</h3>
-            <p>Productos con stock bajo</p>
+        <div class="header-left">
+            <div class="brand">Inventory</div>
+            <div class="brand-sub">Sistema de Gestion de Inventario</div>
         </div>
-        <div class="stat-box critico">
-            <h3>@Model.ProductosCriticos</h3>
-            <p>Productos CRÍTICOS (&lt; 5)</p>
-        </div>
-        <div class="stat-box">
-            <h3>S/ @Model.ValorAfectado.ToString("N2")</h3>
-            <p>Valor total afectado</p>
+        <div class="header-right">
+            <div class="report-title">Reporte de Stock Bajo</div>
+            <div class="report-date">Generado el @Model.FechaGeneracion.ToString("dd/MM/yyyy") a las @Model.FechaGeneracion.ToString("HH:mm")</div>
         </div>
     </div>
 
+    <!-- Summary -->
+    <div class="summary">
+        <div class="summary-card total">
+            <span class="summary-value">@Model.TotalProductos</span>
+            <span class="summary-label">Productos con Stock Bajo</span>
+        </div>
+        <div class="summary-spacer"></div>
+        <div class="summary-card critico">
+            <span class="summary-value">@Model.ProductosCriticos</span>
+            <span class="summary-label">Productos Criticos</span>
+        </div>
+        <div class="summary-spacer"></div>
+        <div class="summary-card valor">
+            <span class="summary-value">S/ @Model.ValorAfectado.ToString("N2")</span>
+            <span class="summary-label">Valor Total Afectado</span>
+        </div>
+    </div>
+
+    <!-- Product Tables Grouped by Category -->
     @if (Model.Productos.Any())
     {
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Producto</th>
-                    <th>Categoría</th>
-                    <th>Stock</th>
-                    <th>Nivel</th>
-                    <th>Precio</th>
-                    <th>Última Act.</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var producto in Model.Productos)
-                {
-                    <tr>
-                        <td>@producto.ProductoId</td>
-                        <td>@producto.Nombre</td>
-                        <td>@producto.CategoriaNombre</td>
-                        <td class="@(producto.Nivel == "Crítico" ? "critico" : "bajo")">
-                            @producto.StockActual unidades
-                        </td>
-                        <td class="@(producto.Nivel == "Crítico" ? "critico" : "bajo")">
-                            @producto.Nivel
-                        </td>
-                        <td>S/ @producto.Precio.ToString("N2")</td>
-                        <td>@producto.UltimaActualizacion.ToString("dd/MM/yyyy")</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        @foreach (var grupo in Model.Productos.GroupBy(p => p.CategoriaNombre).OrderBy(g => g.Key))
+        {
+            <div class="category-section">
+                <div class="category-header">
+                    @grupo.Key
+                    <span>(@grupo.Count() productos)</span>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 8%;">ID</th>
+                            <th style="width: 28%;">Producto</th>
+                            <th style="width: 14%;">Stock</th>
+                            <th style="width: 14%;">Nivel</th>
+                            <th style="width: 16%;">Precio Unit.</th>
+                            <th style="width: 20%;">Ultima Act.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var producto in grupo.OrderBy(p => p.StockActual))
+                        {
+                            <tr>
+                                <td>@producto.ProductoId</td>
+                                <td><strong>@producto.Nombre</strong></td>
+                                <td class="@(producto.Nivel == "Crítico" ? "stock-critico" : "stock-bajo")">
+                                    @producto.StockActual unidades
+                                </td>
+                                <td>
+                                    <span class="badge @(producto.Nivel == "Crítico" ? "badge-critico" : "badge-bajo")">
+                                        @producto.Nivel
+                                    </span>
+                                </td>
+                                <td>S/ @producto.Precio.ToString("N2")</td>
+                                <td>@producto.UltimaActualizacion.ToString("dd/MM/yyyy")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
     }
     else
     {
-        <p style="text-align: center; margin-top: 50px; color: #4caf50; font-size: 18px;">
-            ✅ ¡Excelente! No hay productos con stock bajo.
-        </p>
+        <div class="empty-state">
+            No hay productos con stock bajo. Todo esta en orden.
+        </div>
     }
 
+    <!-- Footer -->
     <div class="footer">
-        <p>Sistema de Gestión de Inventario - Reporte generado automáticamente</p>
+        <p>Inventory - Sistema de Gestion de Inventario | Reporte generado automaticamente | Confidencial</p>
     </div>
 </body>
 </html>

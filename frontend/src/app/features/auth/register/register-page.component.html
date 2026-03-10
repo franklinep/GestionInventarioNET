@@ -1,0 +1,53 @@
+<div class="auth-page">
+  <div class="illustration"></div>
+
+  <section class="auth-card">
+    <div class="brand">
+      <span class="mat-icon brand-icon">inventory_2</span>
+      Inventory
+    </div>
+    <h1>Crear Cuenta 👋</h1>
+    <p>Por favor ingresa los datos</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <label>
+        Nombre completo
+        <input type="text" formControlName="nombre" placeholder="Nombre completo" [class.has-error]="form.controls.nombre.invalid && form.controls.nombre.touched" />
+        @if (form.controls.nombre.invalid && form.controls.nombre.touched) {
+        <span class="field-error">Ingresa un nombre válido (2-50 caracteres)</span>
+        }
+      </label>
+
+      <label>
+        Correo electrónico
+        <input type="email" formControlName="correo" placeholder="correo@empresa.com" [class.has-error]="form.controls.correo.invalid && form.controls.correo.touched" />
+        @if (form.controls.correo.invalid && form.controls.correo.touched) {
+        <span class="field-error">Ingresa un correo válido</span>
+        }
+      </label>
+
+      <label>
+        Crear una contraseña
+        <div class="password-wrap" [class.has-error]="form.controls.password.invalid && form.controls.password.touched">
+          <input [type]="showPassword() ? 'text' : 'password'" formControlName="password" placeholder="********" />
+          <button type="button" class="eye-btn" (click)="showPassword.set(!showPassword())">
+            <span class="mat-icon">{{ showPassword() ? 'visibility_off' : 'visibility' }}</span>
+          </button>
+        </div>
+        @if (form.controls.password.invalid && form.controls.password.touched) {
+        <span class="field-error">La contraseña debe tener mín. 8 caracteres, 1 mayúscula, 1 número y 1 carácter especial (&#64;$!%*?&amp;#)</span>
+        }
+      </label>
+
+      @if (errorMessage()) {
+      <p class="error">{{ errorMessage() }}</p>
+      }
+
+      <button class="primary" type="submit" [disabled]="loading()">
+        {{ loading() ? 'Registrando...' : 'Registrar' }}
+      </button>
+    </form>
+
+    <a class="back" routerLink="/login">Volver al login</a>
+  </section>
+</div>

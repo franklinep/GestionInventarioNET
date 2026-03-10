@@ -18,13 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="..\GestionInventario.Infrastructure\Templates\**\*.cshtml">
-      <Link>Templates\%(RecursiveDir)%(Filename)%(Extension)</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="libwkhtmltox.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

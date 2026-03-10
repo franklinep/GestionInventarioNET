@@ -11,6 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
+	<None Include="Templates\**\*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
 	<PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
 	<PackageReference Include="DinkToPdf" Version="1.0.8" />
 	<PackageReference Include="EFCore.NamingConventions" Version="10.0.1" />

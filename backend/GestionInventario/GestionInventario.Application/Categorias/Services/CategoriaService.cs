@@ -92,12 +92,15 @@ namespace GestionInventario.Application.Categorias.Services
         public async Task Delete(short id, CancellationToken ct)
         {
             var categoria = await _categoriaRepo.GetById(id, ct);
-            
+
             if (categoria == null)
                 throw new InvalidOperationException("Categoría no encontrada");
-            
+
             if (!categoria.IsActivo)
                 throw new InvalidOperationException("La categoría ya está inactiva");
+
+            if (await _categoriaRepo.TieneProductosAsociados(id, ct))
+                throw new InvalidOperationException("No se puede eliminar la categoría porque tiene productos asociados");
 
             await _categoriaRepo.Delete(id, ct);
         }

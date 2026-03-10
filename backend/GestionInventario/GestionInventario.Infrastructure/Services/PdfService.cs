@@ -14,12 +14,12 @@ namespace GestionInventario.Infrastructure.Services
         {
             _pdfConverter = pdfConverter;
 
-            var currentDirectory = Directory.GetCurrentDirectory();
-            var templatePath = Path.Combine(currentDirectory, "Templates");
+            var assemblyLocation = Path.GetDirectoryName(typeof(PdfService).Assembly.Location)!;
+            var templatePath = Path.Combine(assemblyLocation, "Templates");
 
             if (!Directory.Exists(templatePath))
             {
-                throw new DirectoryNotFoundException($"No se encontró la carpeta Templates en: {currentDirectory} ni en {AppContext.BaseDirectory}");
+                throw new DirectoryNotFoundException($"No se encontró la carpeta Templates en: {templatePath}");
             }
 
             _razorEngine = new RazorLightEngineBuilder()

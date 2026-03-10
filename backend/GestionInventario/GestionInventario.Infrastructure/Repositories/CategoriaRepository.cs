@@ -50,5 +50,11 @@ namespace GestionInventario.Infrastructure.Repositories
                 await _db.SaveChangesAsync(ct);
             }
         }
+
+        public async Task<bool> TieneProductosAsociados(short categoriaId, CancellationToken ct)
+        {
+            return await _db.Productos
+                .AnyAsync(p => p.CategoriaId == categoriaId && p.IsActivo, ct);
+        }
     }
 }

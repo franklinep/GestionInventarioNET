@@ -1,0 +1,163 @@
+:host {
+  display: block;
+  min-height: 100dvh;
+}
+
+.auth-page {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  background: var(--bg-page);
+  padding: 24px;
+  gap: 24px;
+}
+
+.illustration {
+  border-radius: 24px;
+  background: linear-gradient(160deg, rgba(0, 110, 196, 0.08) 0%, rgba(0, 110, 196, 0.15) 100%);
+}
+
+.auth-card {
+  max-width: 420px;
+  align-self: center;
+}
+
+.brand {
+  font-family: var(--font-title);
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.25rem;
+}
+
+.brand-icon {
+  font-size: 28px;
+  color: var(--accent-strong);
+}
+
+h1 {
+  margin: 22px 0 8px;
+  font-family: var(--font-title);
+}
+
+p {
+  color: var(--text-soft);
+  margin: 0 0 24px;
+}
+
+form {
+  display: grid;
+  gap: 14px;
+}
+
+label {
+  display: grid;
+  gap: 6px;
+  font-size: 0.9rem;
+  color: var(--text-soft);
+}
+
+input {
+  border: 1px solid var(--accent-strong);
+  border-radius: 10px;
+  padding: 11px 12px;
+  outline: none;
+  font-size: 0.95rem;
+  background: #fff;
+  color: var(--text-main);
+}
+
+input:focus {
+  border-color: var(--accent-strong);
+  box-shadow: 0 0 0 3px rgba(0, 110, 196, 0.12);
+}
+
+.password-wrap {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.password-wrap input {
+  flex: 1;
+  padding-right: 44px;
+}
+
+.eye-btn {
+  position: absolute;
+  right: 8px;
+  border: 0;
+  background: transparent;
+  color: var(--text-soft);
+  cursor: pointer;
+  padding: 4px;
+  display: grid;
+  place-items: center;
+}
+
+.eye-btn:hover {
+  color: var(--accent-strong);
+}
+
+input.has-error,
+.password-wrap.has-error input {
+  border-color: var(--danger);
+}
+
+input.has-error:focus,
+.password-wrap.has-error input:focus {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px rgba(203, 59, 59, 0.12);
+}
+
+.field-error {
+  color: var(--danger);
+  font-size: 0.8rem;
+  margin-top: -2px;
+}
+
+.error {
+  color: var(--danger);
+  margin: 0;
+}
+
+.primary {
+  border: 0;
+  border-radius: 10px;
+  background: var(--accent-strong);
+  color: #fff;
+  padding: 13px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background 0.2s ease;
+}
+
+.primary:hover:not([disabled]) {
+  background: #0058a0;
+}
+
+.back {
+  margin-top: 14px;
+  display: inline-block;
+  color: var(--accent-strong);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+@media (max-width: 980px) {
+  .auth-page {
+    grid-template-columns: 1fr;
+    padding: 16px;
+  }
+
+  .illustration {
+    min-height: 160px;
+  }
+
+  .auth-card {
+    max-width: none;
+  }
+}

@@ -1,0 +1,51 @@
+<div class="auth-page">
+  <div class="illustration"></div>
+
+  <section class="auth-card">
+    <div class="brand">
+      <span class="mat-icon brand-icon">inventory_2</span>
+      Inventory
+    </div>
+    <h1>Bienvenido 👋</h1>
+    <p>Por favor inicia sesión aquí</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <label>
+        Correo electrónico
+        <input type="email" formControlName="correo" placeholder="correo@empresa.com" [class.has-error]="form.controls.correo.invalid && form.controls.correo.touched" />
+        @if (form.controls.correo.invalid && form.controls.correo.touched) {
+        <span class="field-error">Ingresa un correo válido</span>
+        }
+      </label>
+
+      <label>
+        Contraseña
+        <div class="password-wrap" [class.has-error]="form.controls.password.invalid && form.controls.password.touched">
+          <input [type]="showPassword() ? 'text' : 'password'" formControlName="password" placeholder="********" />
+          <button type="button" class="eye-btn" (click)="showPassword.set(!showPassword())">
+            <span class="mat-icon">{{ showPassword() ? 'visibility_off' : 'visibility' }}</span>
+          </button>
+        </div>
+        @if (form.controls.password.invalid && form.controls.password.touched) {
+        <span class="field-error">Ingresa tu contraseña</span>
+        }
+      </label>
+
+      <div class="extra-row">
+        <label class="remember">
+          <input type="checkbox" formControlName="rememberMe" />
+          Recuérdame
+        </label>
+        <a routerLink="/register">Registrar cuenta</a>
+      </div>
+
+      @if (errorMessage()) {
+      <p class="error">{{ errorMessage() }}</p>
+      }
+
+      <button class="primary" type="submit" [disabled]="loading()">
+        {{ loading() ? 'Ingresando...' : 'Iniciar Sesión' }}
+      </button>
+    </form>
+  </section>
+</div>

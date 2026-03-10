@@ -1,0 +1,72 @@
+<section class="dashboard-page">
+  <header>
+    <h2>Equipos de Protección Personal</h2>
+    <a routerLink="/productos">Ver todos</a>
+  </header>
+
+  @if (loading()) {
+  <div class="card">Cargando...</div>
+  } @else if (error()) {
+  <div class="card error">{{ error() }}</div>
+  } @else {
+  <div class="card table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre EPP</th>
+          <th>Imagen</th>
+          <th>Descripción</th>
+          <th>Precio</th>
+          <th>Categoría</th>
+          <th>Stock</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of productos(); track item.productoId) {
+        <tr>
+          <td>{{ item.nombre }}</td>
+          <td>
+            @if (item.imagenUrl) {
+            <img [src]="item.imagenUrl" [alt]="item.nombre" />
+            } @else {
+            <span class="empty-image">Sin imagen</span>
+            }
+          </td>
+          <td>{{ item.descripcion || '-' }}</td>
+          <td>{{ item.precio | currency: 'PEN' : 'symbol' }}</td>
+          <td>{{ item.categoriaNombre }}</td>
+          <td>{{ item.stock }}</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card summary">
+    <h3>Resumen de EPPs Activos</h3>
+
+    <div class="metrics">
+      <article>
+        <span class="mat-icon metric-icon blue">engineering</span>
+        <strong>{{ stats()?.totalProductos }}</strong>
+        <span>Número de EPPs</span>
+      </article>
+      <article>
+        <span class="mat-icon metric-icon orange">inventory</span>
+        <strong>{{ stats()?.stockTotal }}</strong>
+        <span>Stock Total</span>
+      </article>
+      <article>
+        <span class="mat-icon metric-icon purple">category</span>
+        <strong>{{ stats()?.totalCategorias }}</strong>
+        <span>Categorías</span>
+      </article>
+      <article>
+        <span class="mat-icon metric-icon red">warning</span>
+        <strong>{{ stats()?.productosCriticos }}</strong>
+        <span>EPPs Críticos</span>
+      </article>
+    </div>
+  </div>
+  }
+</section>

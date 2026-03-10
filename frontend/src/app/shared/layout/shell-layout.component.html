@@ -1,0 +1,81 @@
+<div class="shell">
+  <aside class="sidebar">
+    <div>
+      <div class="brand">
+        <span class="mat-icon brand-icon">inventory_2</span>
+        Inventory
+      </div>
+
+      <nav class="menu">
+        <a routerLink="/dashboard" routerLinkActive="active">
+          <span class="mat-icon">grid_view</span>
+          Dashboard
+        </a>
+        <a routerLink="/productos" routerLinkActive="active">
+          <span class="mat-icon">inventory_2</span>
+          Productos
+        </a>
+        <a routerLink="/categorias" routerLinkActive="active">
+          <span class="mat-icon">category</span>
+          Categorías
+        </a>
+      </nav>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="theme-toggle">
+        <button
+          type="button"
+          [class.selected]="themeService.mode() === 'light'"
+          (click)="themeService.setMode('light')"
+        >
+          <span class="mat-icon">light_mode</span>
+          Claro
+        </button>
+        <button
+          type="button"
+          [class.selected]="themeService.mode() === 'dark'"
+          (click)="themeService.setMode('dark')"
+        >
+          <span class="mat-icon">dark_mode</span>
+          Oscuro
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="content">
+    <header class="topbar">
+      <div class="greeting">
+        <h1>Hola {{ firstName() }} 👋</h1>
+        <p>{{ greetingText }}</p>
+      </div>
+
+      <div class="topbar-right">
+        <div class="search-box">
+          <span class="mat-icon">search</span>
+          <input type="text" placeholder="Buscar" readonly />
+        </div>
+
+        <button type="button" class="icon-btn notification">
+          <span class="mat-icon">notifications</span>
+        </button>
+
+        <div class="user-chip">
+          <div class="avatar">{{ currentUser()?.nombre?.charAt(0) }}</div>
+          <div class="user-info">
+            <span class="user-name">{{ currentUser()?.nombre }}</span>
+            <span class="user-role">{{ isAdmin() ? 'Administrador' : 'Empleado' }}</span>
+          </div>
+          <button type="button" class="icon-btn" (click)="logout()">
+            <span class="mat-icon">logout</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <section class="page-container">
+      <router-outlet></router-outlet>
+    </section>
+  </main>
+</div>

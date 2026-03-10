@@ -1,0 +1,295 @@
+<section class="products-page">
+  <header class="title-row">
+    <div>
+      <h2>Equipos de Protección Personal</h2>
+      <p>Información detallada</p>
+    </div>
+
+    <div class="header-actions">
+      <button type="button" class="btn report" (click)="descargarReporte()" [disabled]="actionLoading()">
+        <span class="mat-icon">download</span>
+        Descargar Reporte
+      </button>
+      @if (isAdmin) {
+      <button type="button" class="btn send-report" (click)="openEmailModal()" [disabled]="actionLoading()">
+        <span class="mat-icon">send</span>
+        Enviar Reporte
+      </button>
+      }
+    </div>
+  </header>
+
+  @if (feedback()) {
+  <p class="feedback ok">{{ feedback() }}</p>
+  }
+
+  @if (error()) {
+  <p class="feedback error">{{ error() }}</p>
+  }
+
+  <section class="card list-card">
+    <div class="table-tools">
+      <div class="search-wrap">
+        <span class="mat-icon search-icon">search</span>
+        <input [(ngModel)]="search" type="text" placeholder="Buscar EPP" (keyup.enter)="onSearch()" />
+      </div>
+
+      <div class="tool-actions">
+        @if (isAdmin) {
+        <button type="button" class="btn primary" (click)="openCreateModal()">
+          <span class="mat-icon">add_circle</span>
+          Agregar EPP
+        </button>
+        }
+        <button type="button" class="btn ghost" (click)="openFilter()">
+          <span class="mat-icon">tune</span>
+          Filtros
+        </button>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Imagen</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Categoría</th>
+            <th>Stock</th>
+            @if (isAdmin) {
+            <th>Acción</th>
+            }
+          </tr>
+        </thead>
+
+        <tbody>
+          @if (loading()) {
+          <tr>
+            <td [attr.colspan]="isAdmin ? 7 : 6">Cargando...</td>
+          </tr>
+          } @else if (productos.length === 0) {
+          <tr>
+            <td [attr.colspan]="isAdmin ? 7 : 6">No hay productos para mostrar</td>
+          </tr>
+          } @else {
+          @for (producto of productos; track trackProducto($index, producto)) {
+          <tr>
+            <td>{{ producto.nombre }}</td>
+            <td>
+              @if (producto.imagenUrl) {
+              <img [src]="producto.imagenUrl" [alt]="producto.nombre" />
+              } @else {
+              <span class="empty-image">Sin imagen</span>
+              }
+            </td>
+            <td>{{ producto.descripcion || '-' }}</td>
+            <td>{{ producto.precio | currency: 'PEN' : 'symbol' }}</td>
+            <td>{{ producto.categoriaNombre }}</td>
+            <td>{{ producto.stock }}</td>
+            @if (isAdmin) {
+            <td>
+              <div class="row-actions">
+                <button type="button" class="mini edit" (click)="openEditModal(producto)" title="Editar">
+                  <span class="mat-icon">edit</span>
+                </button>
+                <button type="button" class="mini delete" (click)="deleteProducto(producto)" title="Eliminar">
+                  <span class="mat-icon">delete</span>
+                </button>
+              </div>
+            </td>
+            }
+          </tr>
+          }
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <footer class="pagination">
+      <p>Mostrando {{ productos.length }} de {{ totalItems }} registros</p>
+
+      <div class="pager-buttons">
+        <button type="button" class="pager" (click)="goToPage(page - 1)" [disabled]="page === 1">
+          <span class="mat-icon">chevron_left</span>
+        </button>
+        @for (pageNumber of pages; track pageNumber) {
+        <button
+          type="button"
+          class="pager"
+          [class.active]="pageNumber === page"
+          (click)="goToPage(pageNumber)"
+        >
+          {{ pageNumber }}
+        </button>
+        }
+        <button
+          type="button"
+          class="pager"
+          (click)="goToPage(page + 1)"
+          [disabled]="page === totalPages"
+        >
+          <span class="mat-icon">chevron_right</span>
+        </button>
+      </div>
+    </footer>
+  </section>
+</section>
+
+<!-- ── Filtro Modal ── -->
+@if (showFilterModal) {
+<div class="overlay" (click)="closeFilter()">
+  <section class="modal filter-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Filtro</h3>
+      <button type="button" class="close-btn" (click)="closeFilter()">
+        <span class="mat-icon">close</span>
+      </button>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-toggle-row">
+        <label class="toggle-switch">
+          <input type="checkbox" [(ngModel)]="filterCategoryEnabled" />
+          <span class="toggle-track"></span>
+        </label>
+        <span class="filter-label">Categoría</span>
+      </div>
+
+      <div class="filter-body" [class.disabled]="!filterCategoryEnabled">
+        <select (change)="addFilterCategoria($event)" [disabled]="!filterCategoryEnabled">
+          <option value="0">Selecciona la Categoría</option>
+          @for (cat of availableFilterCategorias; track cat.categoriaId) {
+          <option [value]="cat.categoriaId">{{ cat.nombre }}</option>
+          }
+        </select>
+
+        @if (filterCategoriaIdsDraft.length > 0) {
+        <div class="selected-chips">
+          @for (catId of filterCategoriaIdsDraft; track catId) {
+          <label class="chip-label">
+            <input type="checkbox" checked (change)="removeFilterCategoria(catId)" [disabled]="!filterCategoryEnabled" />
+            {{ getCategoriaNombre(catId) }}
+          </label>
+          }
+        </div>
+        }
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-toggle-row">
+        <label class="toggle-switch">
+          <input type="checkbox" [(ngModel)]="filterStockEnabled" />
+          <span class="toggle-track"></span>
+        </label>
+        <span class="filter-label">Stock</span>
+      </div>
+
+      <div class="filter-body" [class.disabled]="!filterStockEnabled">
+        <label>
+          Umbral
+          <input type="number" [(ngModel)]="filterStockDraft" min="0" [disabled]="!filterStockEnabled" />
+        </label>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="btn ghost" (click)="closeFilter()">Cancelar</button>
+      <button type="button" class="btn primary" (click)="applyFilter()">Aplicar</button>
+    </div>
+  </section>
+</div>
+}
+
+<!-- ── Crear/Editar Producto Modal ── -->
+@if (showProductoModal) {
+<div class="overlay" (click)="closeProductoModal()">
+  <section class="modal product-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>{{ editingProducto ? 'Editar EPP' : 'Agregar nuevo EPP' }}</h3>
+      <button type="button" class="close-btn" (click)="closeProductoModal()">
+        <span class="mat-icon">close</span>
+      </button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="saveProducto()">
+      <div class="form-grid">
+        <label>
+          Nombre *
+          <input formControlName="nombre" type="text" placeholder="Ingresa el nombre" />
+        </label>
+
+        <label>
+          Stock *
+          <input formControlName="stock" type="number" min="0" placeholder="Ingresa Stock" />
+        </label>
+
+        <label>
+          Imagen
+          <input type="file" accept=".jpg,.jpeg,.png,.gif,.webp" (change)="onFileSelected($event)" />
+        </label>
+
+        <label>
+          Precio *
+          <input formControlName="precio" type="number" min="0.01" step="0.01" placeholder="Ingresa el Precio" />
+        </label>
+
+        <label class="full">
+          Categoría *
+          <select formControlName="categoriaId">
+            <option [value]="0" disabled>Selecciona la categoría</option>
+            @for (categoria of categorias; track categoria.categoriaId) {
+            <option [value]="categoria.categoriaId">{{ categoria.nombre }}</option>
+            }
+          </select>
+        </label>
+
+        <label class="full">
+          Descripción
+          <textarea formControlName="descripcion" rows="4" placeholder="Ingresa una descripción"></textarea>
+        </label>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn ghost" (click)="closeProductoModal()">Cancelar</button>
+        <button type="submit" class="btn primary" [disabled]="actionLoading()">
+          {{ actionLoading() ? 'Guardando...' : editingProducto ? 'Actualizar' : 'Agregar' }}
+        </button>
+      </div>
+    </form>
+  </section>
+</div>
+}
+
+<!-- ── Enviar Reporte por Email Modal ── -->
+@if (showEmailModal) {
+<div class="overlay" (click)="closeEmailModal()">
+  <section class="modal email-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Enviar Reporte por Email</h3>
+      <button type="button" class="close-btn" (click)="closeEmailModal()">
+        <span class="mat-icon">close</span>
+      </button>
+    </div>
+
+    <p class="modal-desc">
+      Se generará un PDF con los productos que tengan stock igual o menor al umbral definido y se enviará por correo electrónico al administrador.
+    </p>
+
+    <label>
+      Umbral de stock bajo
+      <input type="number" [(ngModel)]="emailUmbral" min="1" />
+    </label>
+
+    <div class="modal-actions">
+      <button type="button" class="btn ghost" (click)="closeEmailModal()">Cancelar</button>
+      <button type="button" class="btn send-report" (click)="confirmEnviarEmail()" [disabled]="actionLoading()">
+        <span class="mat-icon">send</span>
+        {{ actionLoading() ? 'Enviando...' : 'Enviar' }}
+      </button>
+    </div>
+  </section>
+</div>
+}
