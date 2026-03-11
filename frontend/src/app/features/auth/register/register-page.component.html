@@ -39,12 +39,23 @@
         }
       </label>
 
+      @if (rateLimitCountdown() > 0) {
+      <div class="rate-limit-alert">
+        <span class="mat-icon">hourglass_top</span>
+        <span>Demasiados intentos. Intenta de nuevo en <strong>{{ rateLimitCountdown() }}s</strong></span>
+      </div>
+      }
+
       @if (errorMessage()) {
       <p class="error">{{ errorMessage() }}</p>
       }
 
-      <button class="primary" type="submit" [disabled]="loading()">
-        {{ loading() ? 'Registrando...' : 'Registrar' }}
+      <button class="primary" type="submit" [disabled]="loading() || rateLimitCountdown() > 0">
+        @if (rateLimitCountdown() > 0) {
+          Espera {{ rateLimitCountdown() }}s
+        } @else {
+          {{ loading() ? 'Registrando...' : 'Registrar' }}
+        }
       </button>
     </form>
 

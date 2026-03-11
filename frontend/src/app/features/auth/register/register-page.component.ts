@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnDestroy } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
@@ -10,14 +10,16 @@ import { AuthService } from '../../../core/services/auth.service';
   templateUrl: './register-page.component.html',
   styleUrl: './register-page.component.scss'
 })
-export class RegisterPageComponent {
+export class RegisterPageComponent implements OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private countdownInterval: ReturnType<typeof setInterval> | null = null;
 
   readonly showPassword = signal(false);
   readonly loading = signal(false);
   readonly errorMessage = signal('');
+  readonly rateLimitCountdown = signal(0);
 
   readonly form = this.fb.nonNullable.group({
     nombre: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
@@ -33,7 +35,7 @@ export class RegisterPageComponent {
   });
 
   submit(): void {
-    if (this.form.invalid) {
+    if (this.form.invalid || this.rateLimitCountdown() > 0) {
       this.form.markAllAsTouched();
       return;
     }
@@ -48,8 +50,39 @@ export class RegisterPageComponent {
       },
       error: (error) => {
         this.loading.set(false);
+
+        if (error.status === 429) {
+          this.startCooldown(60);
+          return;
+        }
+
         this.errorMessage.set(error?.error?.message ?? 'No se pudo crear la cuenta');
       }
     });
+  }
+
+  private startCooldown(seconds: number): void {
+    this.errorMessage.set('');
+    this.rateLimitCountdown.set(seconds);
+
+    this.clearCountdown();
+    this.countdownInterval = setInterval(() => {
+      const remaining = this.rateLimitCountdown() - 1;
+      this.rateLimitCountdown.set(remaining);
+      if (remaining <= 0) {
+        this.clearCountdown();
+      }
+    }, 1000);
+  }
+
+  private clearCountdown(): void {
+    if (this.countdownInterval) {
+      clearInterval(this.countdownInterval);
+      this.countdownInterval = null;
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.clearCountdown();
   }
 }

@@ -1,11 +1,13 @@
 using GestionInventario.Application.Auth.DTOs;
 using GestionInventario.Application.Auth.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace GestionInventario.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [EnableRateLimiting("auth")]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
@@ -21,24 +23,14 @@ namespace GestionInventario.Api.Controllers
         [HttpPost("register")]
         [ProducesResponseType(typeof(AuthResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request, CancellationToken ct)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-                var response = await _authService.RegistrarUsuario(request, ct);
-                return CreatedAtAction(nameof(Register), new { id = response.UsuarioId }, response);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "Error interno del servidor", detail = ex.Message });
-            }
+            var response = await _authService.RegistrarUsuario(request, ct);
+            return CreatedAtAction(nameof(Register), new { id = response.UsuarioId }, response);
         }
 
         /// <summary>
@@ -47,24 +39,14 @@ namespace GestionInventario.Api.Controllers
         [HttpPost("login")]
         [ProducesResponseType(typeof(AuthResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
         public async Task<IActionResult> Login([FromBody] LoginRequest request, CancellationToken ct)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-                var response = await _authService.LoginUsuario(request, ct);
-                return Ok(response);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "Error interno del servidor", detail = ex.Message });
-            }
+            var response = await _authService.LoginUsuario(request, ct);
+            return Ok(response);
         }
     }
 }

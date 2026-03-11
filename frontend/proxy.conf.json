@@ -1,12 +1,12 @@
 {
   "/api": {
-    "target": "http://localhost:5000",
+    "target": "https://localhost:7001",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/images": {
-    "target": "http://localhost:5000",
+    "target": "https://localhost:7001",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"

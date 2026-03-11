@@ -12,10 +12,13 @@ using GestionInventario.Domain.Interfaces;
 using GestionInventario.Infrastructure;
 using GestionInventario.Infrastructure.Repositories;
 using GestionInventario.Infrastructure.Services;
+using GestionInventario.Api.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Threading.RateLimiting;
 using DinkToPdf;
 using DinkToPdf.Contracts;
 
@@ -73,6 +76,22 @@ public static class Program
 
         builder.Services.AddAuthorization();
 
+        builder.Services.AddRateLimiter(options =>
+        {
+            options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+            options.AddPolicy("auth", context =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "anonymous",
+                    factory: _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 5,
+                        Window = TimeSpan.FromMinutes(1),
+                        QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                        QueueLimit = 0
+                    }));
+        });
+
         builder.Services.AddControllers();
 
         builder.Services.AddEndpointsApiExplorer();
@@ -80,6 +99,7 @@ public static class Program
 
         var app = builder.Build();
 
+        app.UseExceptionHandling();
 
         if (app.Environment.IsDevelopment())
         {
@@ -90,6 +110,8 @@ public static class Program
         app.UseHttpsRedirection();
 
         app.UseStaticFiles();
+
+        app.UseRateLimiter();
 
         app.UseAuthentication();
         app.UseAuthorization();
